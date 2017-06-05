@@ -48,18 +48,28 @@ static void identityFinalizer(SEXP identity_) {
 // Simpler interface 
 //
 // [[Rcpp::export]]
-SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_) {
+SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP token_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session = 
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
-    if (uuid_ == R_NilValue || ip_address_ == R_NilValue) {
+    
+    bool use_token = token_ != R_NilValue;
+    if (!use_token && (uuid_ == R_NilValue || ip_address_ == R_NilValue)) {
         Rcpp::stop("Either uuid or ip_address was null.");
     }
 
-    std::string uuid = Rcpp::as<std::string>(uuid_);
-    std::string ip_address = Rcpp::as<std::string>(ip_address_);
+    std::string uuid;
+    std::string ip_address;
+    std::string token;
+
+    if (use_token) {
+        token = Rcpp::as<std::string>(token_);
+    } else {
+        uuid = Rcpp::as<std::string>(uuid_);
+        ip_address = Rcpp::as<std::string>(ip_address_);
+    }
 
     const std::string authsrv = "//blp/apiauth";
     if (!session->openService(authsrv.c_str())) {
@@ -68,8 +78,12 @@ SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_) {
 
     Service apiAuthSvc = session->getService(authsrv.c_str());
     Request authorizationRequest = apiAuthSvc.createAuthorizationRequest();
-    authorizationRequest.set("uuid", uuid.c_str());
-    authorizationRequest.set("ipAddress", ip_address.c_str());
+    if (use_token) {
+        authorizationRequest.set("token", token.c_str());
+    } else {
+        authorizationRequest.set("uuid", uuid.c_str());
+        authorizationRequest.set("ipAddress", ip_address.c_str());
+    }
     Identity* identity_p = new Identity(session->createIdentity());
     session->sendAuthorizationRequest(authorizationRequest, identity_p);
 

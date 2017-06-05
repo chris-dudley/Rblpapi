@@ -7,15 +7,16 @@
 using namespace Rcpp;
 
 // authenticate_Impl
-SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_);
-RcppExport SEXP Rblpapi_authenticate_Impl(SEXP con_SEXP, SEXP uuid_SEXP, SEXP ip_address_SEXP) {
+SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP token_);
+RcppExport SEXP Rblpapi_authenticate_Impl(SEXP con_SEXP, SEXP uuid_SEXP, SEXP ip_address_SEXP, SEXP token_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type uuid_(uuid_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type ip_address_(ip_address_SEXP);
-    rcpp_result_gen = Rcpp::wrap(authenticate_Impl(con_, uuid_, ip_address_));
+    Rcpp::traits::input_parameter< SEXP >::type token_(token_SEXP);
+    rcpp_result_gen = Rcpp::wrap(authenticate_Impl(con_, uuid_, ip_address_, token_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -108,14 +109,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // blpConnect_Impl
-SEXP blpConnect_Impl(const std::string host, const int port);
-RcppExport SEXP Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP) {
+SEXP blpConnect_Impl(const std::string host, const int port, const std::string authOptions);
+RcppExport SEXP Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP, SEXP authOptionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type host(hostSEXP);
     Rcpp::traits::input_parameter< const int >::type port(portSEXP);
-    rcpp_result_gen = Rcpp::wrap(blpConnect_Impl(host, port));
+    Rcpp::traits::input_parameter< const std::string >::type authOptions(authOptionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(blpConnect_Impl(host, port, authOptions));
+    return rcpp_result_gen;
+END_RCPP
+}
+// blpGenerateToken_Impl
+std::string blpGenerateToken_Impl(SEXP con_);
+RcppExport SEXP Rblpapi_blpGenerateToken_Impl(SEXP con_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
+    rcpp_result_gen = Rcpp::wrap(blpGenerateToken_Impl(con_));
     return rcpp_result_gen;
 END_RCPP
 }

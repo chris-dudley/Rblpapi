@@ -4,7 +4,7 @@
 \alias{blpAuthenticate}
 \title{Authenticate Bloomberg API access}
 \usage{
-blpAuthenticate(uuid, host = "localhost", ip.address,
+blpAuthenticate(uuid, host = "localhost", ip.address, token,
   con = defaultConnection())
 }
 \arguments{
@@ -14,13 +14,14 @@ blpAuthenticate(uuid, host = "localhost", ip.address,
 
 \item{ip.address}{An optional character variable with an IP address}
 
+\item{token}{An optional character variable with an authentication token}
+
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function
 \code{defaultConnection}.}
 }
 \value{
-Not sure. May just be the side effect of having the
-session authenticated.
+An identity object that may be used to authorize further requests.
 }
 \description{
 This function authenticates against the the Bloomberg API

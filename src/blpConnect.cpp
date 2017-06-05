@@ -37,10 +37,14 @@ static void sessionFinalizer(SEXP session_) {
 }
 
 // [[Rcpp::export]]
-SEXP blpConnect_Impl(const std::string host, const int port) {
+SEXP blpConnect_Impl(const std::string host, const int port, const std::string authOptions) {
     SessionOptions sessionOptions;
     sessionOptions.setServerHost(host.c_str());
     sessionOptions.setServerPort(port);
+    if (!authOptions.empty()) {
+        sessionOptions.setAuthenticationOptions(authOptions.c_str());
+    }
+
     Session* sp = new Session(sessionOptions);
 
     if (!sp->start()) {

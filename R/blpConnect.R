@@ -29,15 +29,21 @@
 ##' @param host A character option with either a machine name that is
 ##' resolvable by DNS, or an IP address. Defaults to
 ##' \sQuote{localhost}.
+##' @param auth.options A character option that specifies any
+##' authentication options that should be specified on session creation.
+##' If the authentication options character is empty, it is not attached
+##' to the session.
+##' Defaults to an empty character.
 ##' @return In the \code{default=TRUE} case nothing is returned, and
 ##' this connection is automatically used for all future calls which
 ##' omit the \code{con} argument. Otherwise a connection object is
 ##' returned which is required by all the accessor functions in the
 ##' package.
-##' @details For both \code{host} and \code{port} argument, default
+##' @details For the \code{host}, \code{port}, and \code{auth.options}
+##' arguments, default
 ##' values can also be specified via \code{\link{options}} using,
-##' respectively, the named entries \code{blpHost} and
-##' \code{blpConnect}.
+##' respectively, the named entries \code{blpHost},
+##' \code{blpConnect}, and \code{blpAuthOptions}.
 ##'
 ##' If an additional option \code{blpAutoConnect} is set to
 ##' \sQuote{TRUE}, a connection is established in the
@@ -51,10 +57,12 @@
 ##' }
 blpConnect <- function(host=getOption("blpHost", "localhost"),
                        port=getOption("blpPort", 8194L),
+                       auth.options=getOption("blpAuthOptions", ""),
                        default=TRUE) {
     if (storage.mode(port) != "integer") port <- as.integer(port)
     if (storage.mode(host) != "character") stop("Host argument must be character.", call.=FALSE)
-    con <- blpConnect_Impl(host, port)
+    if (storage.mode(auth.options) != "character") stop("Authentication Options argument must be character.", call.=FALSE)
+    con <- blpConnect_Impl(host, port, auth.options)
 
     if (default) .pkgenv$con <- con else return(con)
 }

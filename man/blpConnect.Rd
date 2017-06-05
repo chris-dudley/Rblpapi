@@ -5,7 +5,8 @@
 \title{Establish connection to Bloomberg service}
 \usage{
 blpConnect(host = getOption("blpHost", "localhost"),
-  port = getOption("blpPort", 8194L), default = TRUE)
+  port = getOption("blpPort", 8194L),
+  auth.options = getOption("blpAuthOptions", ""), default = TRUE)
 }
 \arguments{
 \item{host}{A character option with either a machine name that is
@@ -14,6 +15,12 @@ resolvable by DNS, or an IP address. Defaults to
 
 \item{port}{An integer variable with the connection port. Default
 to \code{8194L}.}
+
+\item{auth.options}{A character option that specifies any
+authentication options that should be specified on session creation.
+If the authentication options character is empty, it is not attached
+to the session.
+Defaults to an empty character.}
 
 \item{default}{A logical indicating whether this connection should
 be saved as the default, as opposed to returned to the
@@ -30,10 +37,11 @@ package.
 This function connects to the Bloomberg API
 }
 \details{
-For both \code{host} and \code{port} argument, default
+For the \code{host}, \code{port}, and \code{auth.options}
+arguments, default
 values can also be specified via \code{\link{options}} using,
-respectively, the named entries \code{blpHost} and
-\code{blpConnect}.
+respectively, the named entries \code{blpHost},
+\code{blpConnect}, and \code{blpAuthOptions}.
 
 If an additional option \code{blpAutoConnect} is set to
 \sQuote{TRUE}, a connection is established in the
